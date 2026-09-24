@@ -1,4 +1,4 @@
-﻿#Import required modules
+#Import required modules
 Import-Module ActiveDirectory
 
 #Create default password
@@ -20,18 +20,22 @@ foreach ($user in $Users)
     $OUpath = $user.'Organizational Unit'
 
     #Create new AD account for each user in CSV
-    New-ADUser `
-        -Name "$Fname $Lname" `
-        -GivenName $Fname `
-        -Surname $Lname `
-        -SamAccountName "$Uname" `
-        -UserPrincipalName "$Uname@home.local" `
-        -Path $OUpath `
-        -AccountPassword $Password `
-        -EmailAddress $Eaddress `
-        -ChangePasswordAtLogon $true `
-        -Enabled $true
+    $Params = 
+    @{
+        Name                  = "$Fname $Lname"
+        GivenName             = $Fname
+        Surname               = $Lname
+        SamAccountName        = $Uname
+        UserPrincipalName     = "$Uname@$Domain"
+        Path                  = $OUpath
+        AccountPassword       = $Password
+        EmailAddress          = $Eaddress
+        ChangePasswordAtLogon = $true
+        Enabled               = $true 
+    }
 
+    New-ADUser @Params
+    
     #Echo output for each account
     Write-Output "Account created for $Fname $Lname in $OUpath"
 }
