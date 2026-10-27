@@ -10,6 +10,9 @@ $Filepath = Read-Host -Prompt "Please provide CSV filepath: "
 #Import CSV to variable
 $Users = Import-Csv $Filepath
 
+#Store user domain info
+$Domain = Get-ADDomain.DNSRoot
+
 #Loop through CSV
 foreach ($user in $Users)
 {
